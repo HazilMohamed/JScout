@@ -5,11 +5,15 @@ import { PythonShell } from "python-shell";
 const app = express();
 const port = 8080;
 
-app.get("/", (req, res) => {
+app.get("/match", (req, res) => {
   res.send("Hello world!");
-  PythonShell.run("./src/hello.py", null, function (err, res) {
-    if (err) throw err;
-    if (res) console.log(res);
+  const pythonOptions = {
+    args: [String(req.query.minute)],
+    scriptPath: "./src/python/",
+  };
+  PythonShell.run("./match.py", pythonOptions, function (err, out) {
+    if (err) console.log(err);
+    if (out) console.log(out);
   });
 });
 
