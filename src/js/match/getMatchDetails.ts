@@ -8,7 +8,7 @@ matchRouter.get("/", (req, res) => {
 
 matchRouter.post("/", (req, res) => {
   const pythonOptions = {
-    args: [String(req.query.minute)],
+    args: [String(req.body.minute)],
     scriptPath: "./src/python/",
   };
   PythonShell.run("./match.py", pythonOptions, function (err, out) {
