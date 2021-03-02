@@ -11,9 +11,8 @@ def find_events(minute):
             data = json.load(file)
         match = pd.json_normalize(data, sep='_')
         match_minute = match[match['minute'] == minute]
-        return match_minute
+        return match_minute.T.to_json()
     except:
         return 'File not found!'
-
 
 print(find_events(minute))
