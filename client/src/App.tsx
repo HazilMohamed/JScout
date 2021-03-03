@@ -8,7 +8,7 @@ function App() {
   const api = config.api;
   const [matchDetails, setMatchDetails] = useState<any>();
   const fetchMatch = () => {
-    axios.post(api + "/match", { minute: "3" }).then((res) => {
+    axios.post(api + "/match", { player: "Axel Witsel" }).then((res) => {
       const data = JSON.parse(res.data);
       setMatchDetails(Object.values(data));
     });
@@ -18,7 +18,10 @@ function App() {
   }, []);
   return (
     <div>
-      {matchDetails && matchDetails.map((ev: any) => <p>{ev.timestamp}</p>)}
+      {matchDetails &&
+        matchDetails.map((ev: any) => (
+          <p key={ev.id}>{ev.pass_end_location}</p>
+        ))}
     </div>
   );
 }
