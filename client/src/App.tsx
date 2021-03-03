@@ -1,28 +1,17 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+
 import "./App.css";
-import config from "./config";
+import MatchAnalysis from "./components/matchAnalysis";
+import Home from "./components/home";
 
 function App() {
-  const api = config.api;
-  const [matchDetails, setMatchDetails] = useState<any>();
-  const fetchMatch = () => {
-    axios.post(api + "/match", { player: "Axel Witsel" }).then((res) => {
-      const data = JSON.parse(res.data);
-      setMatchDetails(Object.values(data));
-    });
-  };
-  useEffect(() => {
-    fetchMatch();
-  }, []);
   return (
-    <div>
-      {matchDetails &&
-        matchDetails.map((ev: any) => (
-          <p key={ev.id}>{ev.pass_end_location}</p>
-        ))}
-    </div>
+    <BrowserRouter>
+      <Switch>
+        <Route path="/" component={Home} exact />
+        <Route path="/match" component={MatchAnalysis} exact />
+      </Switch>
+    </BrowserRouter>
   );
 }
 
