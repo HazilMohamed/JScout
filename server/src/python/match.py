@@ -9,7 +9,7 @@ passing_attr = ['id', 'index', 'period', 'timestamp', 'duration', 'type_name', '
 
 def find_passes(player):
     try:
-        with open('./src/python/brazil_belgium.json') as file:
+        with open('./src/python/match_brazil_belgium.json') as file:
             data = json.load(file)
         match = pd.json_normalize(data, sep='_')
         match_player = match[match['player_name'] == player]

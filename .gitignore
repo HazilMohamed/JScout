@@ -104,4 +104,4 @@ dist
 .tern-port
 
 # JSON files
-*.json
+match_*.json
