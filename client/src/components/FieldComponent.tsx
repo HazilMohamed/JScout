@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 import axios from "axios";
-import { DoubleSide } from "three";
+import { DoubleSide, Vector3 } from "three";
 
 import config from "../config";
 import { PassDetailsTypes } from "../types/types";
+import { Line } from "@react-three/drei";
 
 const FieldComponent: React.FC = () => {
   const api = config.api;
@@ -18,9 +19,15 @@ const FieldComponent: React.FC = () => {
       setMatchDetails(Object.values(data));
     });
   };
+
+  const fixCoordinates = (coordinates: Array<number>) => {
+    return new Vector3(coordinates[0] / 10 - 6, 0.1, coordinates[1] / 10 - 4);
+  };
+
   useEffect(() => {
     fetchMatch();
   }, []);
+
   return (
     <mesh>
       <mesh
@@ -33,12 +40,18 @@ const FieldComponent: React.FC = () => {
       </mesh>
       {matchDetails &&
         matchDetails.map((ev: PassDetailsTypes) => (
-          <mesh
-            key={ev.id}
-            position={[ev.location[0] / 10 - 6, 0.1, ev.location[1] / 10 - 4]}
-          >
-            <sphereGeometry args={[0.1]} />
-            <meshBasicMaterial color={"red"} />
+          <mesh key={ev.id}>
+            <mesh position={fixCoordinates(ev.location)}>
+              <sphereGeometry args={[0.1]} />
+              <meshBasicMaterial color={"red"} />
+            </mesh>
+            <Line
+              points={[
+                fixCoordinates(ev.location),
+                fixCoordinates(ev.pass_end_location),
+              ]}
+              flatShading={true}
+            />
           </mesh>
         ))}
     </mesh>
