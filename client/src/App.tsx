@@ -1,8 +1,8 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import "./App.css";
-import MatchAnalysis from "./components/matchAnalysis";
-import Home from "./components/home";
+import MatchAnalysis from "./containers/MatchAnalysis";
+import Home from "./containers/Home";
 
 function App() {
   return (
