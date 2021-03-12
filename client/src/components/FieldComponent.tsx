@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 import axios from "axios";
-import { DoubleSide, Vector3 } from "three";
+import { DoubleSide, Vector3, CatmullRomCurve3 } from "three";
 
 import config from "../config";
 import { PassDetailsTypes } from "../types/types";
@@ -14,10 +14,36 @@ const FieldComponent: React.FC = () => {
   >();
 
   const fetchMatch = () => {
-    axios.post(api + "/match", { player: "Kevin De Bruyne" }).then((res) => {
+    axios.post(api + "/match", { player: "Thibaut Courtois" }).then((res) => {
       const data = JSON.parse(res.data[0]);
       setMatchDetails(Object.values(data));
     });
+  };
+
+  const generateCurve = (
+    start: Array<number>,
+    end: Array<number>,
+    angle: number,
+    height: number
+  ) => {
+    let x1 = start[0] / 10 - 6,
+      y1 = start[1] / 10 - 4,
+      x2 = end[0] / 10 - 6,
+      y2 = end[1] / 10 - 4;
+    height = height === 1 ? 0.1 : height === 2 ? 0.35 : 0.7;
+    const spline = new CatmullRomCurve3([
+      new Vector3(x1, 0.1, y1),
+      height > 0
+        ? new Vector3(
+            x1 + 0.2 * (x2 - x1),
+            height,
+            y1 + 0.2 * (x2 - x1) * Math.tan(angle)
+          )
+        : new Vector3((x2 - x1) / 2, 0.1, y2 - y1 / 2),
+      new Vector3(x2, 0.1, y2),
+    ]);
+
+    return spline.getPoints(50);
   };
 
   const fixCoordinates = (coordinates: Array<number>) => {
@@ -46,10 +72,12 @@ const FieldComponent: React.FC = () => {
               <meshBasicMaterial color={"red"} />
             </mesh>
             <Line
-              points={[
-                fixCoordinates(ev.location),
-                fixCoordinates(ev.pass_end_location),
-              ]}
+              points={generateCurve(
+                ev.location,
+                ev.pass_end_location,
+                ev.pass_angle,
+                ev.pass_height_id
+              )}
               flatShading={true}
             />
           </mesh>

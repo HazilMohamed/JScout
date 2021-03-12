@@ -15,7 +15,7 @@ export type PassDetailsTypes = {
   pass_angle: number;
   duration: number;
   pass_length: number;
-  pass_height_name: number;
+  pass_height_id: number;
   pass_body_part_name?: string;
   pass_outcome_name?: string;
   pass_recipient_name?: string;
