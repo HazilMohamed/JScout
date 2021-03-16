@@ -10,7 +10,7 @@ const MatchAnalysis = () => {
 
   return (
     <Canvas style={{ height: innerHeight, width: innerWidth }}>
-      <gridHelper args={[12]} />
+      <gridHelper args={[12, 12]} />
       <FieldComponent />
       <PerspectiveCamera
         makeDefault

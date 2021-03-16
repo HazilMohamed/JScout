@@ -33,13 +33,7 @@ const FieldComponent: React.FC = () => {
     height = height === 1 ? 0.1 : height === 2 ? 0.35 : 0.7;
     const spline = new CatmullRomCurve3([
       new Vector3(x1, 0.1, y1),
-      height > 0
-        ? new Vector3(
-            x1 + 0.2 * (x2 - x1),
-            height,
-            y1 + 0.2 * (x2 - x1) * Math.tan(angle)
-          )
-        : new Vector3((x2 - x1) / 2, 0.1, y2 - y1 / 2),
+      new Vector3((x2 + x1) / 2, height, (y2 + y1) / 2),
       new Vector3(x2, 0.1, y2),
     ]);
 
@@ -68,7 +62,7 @@ const FieldComponent: React.FC = () => {
         matchDetails.map((ev: PassDetailsTypes) => (
           <mesh key={ev.id}>
             <mesh position={fixCoordinates(ev.location)}>
-              <sphereGeometry args={[0.1]} />
+              <sphereGeometry args={[0.05]} />
               <meshBasicMaterial color={"red"} />
             </mesh>
             <Line
