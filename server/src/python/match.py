@@ -4,7 +4,7 @@ import json
 
 player = str(sys.argv[1])
 passing_attr = ['id', 'index', 'period', 'timestamp', 'duration', 'type_name', 'play_pattern_name', 'team_name', 'location', 'player_name', 'position_name',
-                'pass_length', 'pass_angle', 'pass_height_id', 'pass_end_location', 'pass_recipient_name', 'pass_body_part_name', 'pass_outcome_name']
+                'pass_length', 'pass_angle', 'pass_height_id', 'pass_end_location', 'pass_recipient_name', 'pass_body_part_id', 'pass_outcome_name']
 
 
 def find_passes(player):

@@ -2,10 +2,11 @@
 import React, { useEffect } from "react";
 import axios from "axios";
 import { DoubleSide, Vector3, CatmullRomCurve3 } from "three";
+import { Line } from "@react-three/drei";
 
 import config from "../config";
 import { PassDetailsTypes } from "../types/types";
-import { Line } from "@react-three/drei";
+import { HeightInfo, BodyInfo } from "../helpers/passHelpers";
 
 const FieldComponent: React.FC = () => {
   const api = config.api;
@@ -14,7 +15,7 @@ const FieldComponent: React.FC = () => {
   >();
 
   const fetchMatch = () => {
-    axios.post(api + "/match", { player: "Thibaut Courtois" }).then((res) => {
+    axios.post(api + "/match", { player: "Thomas Meunier" }).then((res) => {
       const data = JSON.parse(res.data[0]);
       setMatchDetails(Object.values(data));
     });
@@ -23,25 +24,28 @@ const FieldComponent: React.FC = () => {
   const generateCurve = (
     start: Array<number>,
     end: Array<number>,
-    angle: number,
-    height: number
+    height: number,
+    body: number,
+    length: number
   ) => {
-    let x1 = start[0] / 10 - 6,
-      y1 = start[1] / 10 - 4,
-      x2 = end[0] / 10 - 6,
-      y2 = end[1] / 10 - 4;
-    height = height === 1 ? 0.1 : height === 2 ? 0.35 : 0.7;
+    let mid = fixCoordinates(
+      [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2],
+      height
+    );
+    height = HeightInfo.find((x) => x.id === height)?.height || 0.1;
+    let isLongPass = length > 40 ? true : false;
     const spline = new CatmullRomCurve3([
-      new Vector3(x1, 0.1, y1),
-      new Vector3((x2 + x1) / 2, height, (y2 + y1) / 2),
-      new Vector3(x2, 0.1, y2),
+      new Vector3(...fixCoordinates(start, body)),
+      new Vector3(mid[0], height, mid[2]),
+      new Vector3(...fixCoordinates(end, isLongPass ? 0.1 : body)),
     ]);
 
-    return spline.getPoints(50);
+    return spline.getPoints(25);
   };
 
-  const fixCoordinates = (coordinates: Array<number>) => {
-    return new Vector3(coordinates[0] / 10 - 6, 0.1, coordinates[1] / 10 - 4);
+  const fixCoordinates = (coordinates: Array<number>, body?: number) => {
+    body = BodyInfo.find((x) => x.id === body)?.height || 0.1;
+    return [coordinates[0] / 10 - 6, body, coordinates[1] / 10 - 4];
   };
 
   useEffect(() => {
@@ -60,8 +64,14 @@ const FieldComponent: React.FC = () => {
       </mesh>
       {matchDetails &&
         matchDetails.map((ev: PassDetailsTypes) => (
-          <mesh key={ev.id}>
-            <mesh position={fixCoordinates(ev.location)}>
+          <mesh key={ev.id} onClick={() => console.log(ev)}>
+            <mesh
+              position={
+                new Vector3(
+                  ...fixCoordinates(ev.location, ev.pass_body_part_id)
+                )
+              }
+            >
               <sphereGeometry args={[0.05]} />
               <meshBasicMaterial color={"red"} />
             </mesh>
@@ -69,8 +79,9 @@ const FieldComponent: React.FC = () => {
               points={generateCurve(
                 ev.location,
                 ev.pass_end_location,
-                ev.pass_angle,
-                ev.pass_height_id
+                ev.pass_height_id,
+                ev.pass_body_part_id || 40,
+                ev.pass_length
               )}
               flatShading={true}
             />
