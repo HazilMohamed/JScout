@@ -19,5 +19,5 @@ export type PassDetailsTypes = {
   pass_body_part_id?: number;
   pass_outcome_name?: string;
   pass_recipient_name?: string;
-  play_pattern_name?: string;
+  play_pattern_id?: number;
 } & BasicDetailsTypes;

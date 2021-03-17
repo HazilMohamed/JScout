@@ -13,3 +13,12 @@ export const BodyInfo = [
   { id: 70, name: "Other", height: 0.2 },
   { id: 106, name: "No Touch", height: 0.1 },
 ];
+
+export const PlayPatternInfo = [
+  { id: 1, name: "From Corner", height: 0.1 },
+  { id: 2, name: "From Corner", height: 0.1 },
+  { id: 3, name: "From Free Kick", height: 0.1 },
+  { id: 4, name: "From Throw In", height: 0.6 },
+  { id: 5, name: "Other", height: 0.1 },
+  { id: 6, name: "From Counter", height: 0.1 },
+];

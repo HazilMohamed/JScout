@@ -6,7 +6,7 @@ import { Line } from "@react-three/drei";
 
 import config from "../config";
 import { PassDetailsTypes } from "../types/types";
-import { HeightInfo, BodyInfo } from "../helpers/passHelpers";
+import { HeightInfo, BodyInfo, PlayPatternInfo } from "../helpers/passHelpers";
 
 const FieldComponent: React.FC = () => {
   const api = config.api;
@@ -15,7 +15,7 @@ const FieldComponent: React.FC = () => {
   >();
 
   const fetchMatch = () => {
-    axios.post(api + "/match", { player: "Thomas Meunier" }).then((res) => {
+    axios.post(api + "/match", { player: "Kevin De Bruyne" }).then((res) => {
       const data = JSON.parse(res.data[0]);
       setMatchDetails(Object.values(data));
     });
@@ -25,27 +25,36 @@ const FieldComponent: React.FC = () => {
     start: Array<number>,
     end: Array<number>,
     height: number,
-    body: number,
-    length: number
+    body?: number,
+    playType?: number
   ) => {
-    let mid = fixCoordinates(
+    let mid = findLocation(
       [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2],
       height
     );
     height = HeightInfo.find((x) => x.id === height)?.height || 0.1;
-    let isLongPass = length > 40 ? true : false;
-    const spline = new CatmullRomCurve3([
-      new Vector3(...fixCoordinates(start, body)),
+    const curve = new CatmullRomCurve3([
+      new Vector3(...findLocation(start, body, playType)),
       new Vector3(mid[0], height, mid[2]),
-      new Vector3(...fixCoordinates(end, isLongPass ? 0.1 : body)),
+      new Vector3(...findLocation(end, body)),
     ]);
 
-    return spline.getPoints(25);
+    return curve.getPoints(25);
   };
 
-  const fixCoordinates = (coordinates: Array<number>, body?: number) => {
-    body = BodyInfo.find((x) => x.id === body)?.height || 0.1;
-    return [coordinates[0] / 10 - 6, body, coordinates[1] / 10 - 4];
+  const findLocation = (
+    coordinates: Array<number>,
+    loc?: number,
+    playType?: number
+  ) => {
+    let isRegularPlay = playType && loc;
+    loc = BodyInfo.find((x) => x.id === loc)?.height || 0.1;
+    playType = PlayPatternInfo.find((x) => x.id === playType)?.height || 0.1;
+    return [
+      coordinates[0] / 10 - 6,
+      isRegularPlay ? loc : playType,
+      coordinates[1] / 10 - 4,
+    ];
   };
 
   useEffect(() => {
@@ -68,7 +77,11 @@ const FieldComponent: React.FC = () => {
             <mesh
               position={
                 new Vector3(
-                  ...fixCoordinates(ev.location, ev.pass_body_part_id)
+                  ...findLocation(
+                    ev.location,
+                    ev.pass_body_part_id,
+                    ev.play_pattern_id
+                  )
                 )
               }
             >
@@ -80,10 +93,11 @@ const FieldComponent: React.FC = () => {
                 ev.location,
                 ev.pass_end_location,
                 ev.pass_height_id,
-                ev.pass_body_part_id || 40,
-                ev.pass_length
+                ev.pass_body_part_id,
+                ev.play_pattern_id
               )}
               flatShading={true}
+              color={"#da5072"}
             />
           </mesh>
         ))}
