@@ -2,7 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 
-import matchRouter from "./match/getMatchDetails";
+import matchRouter from "./match/matchRouter";
 
 const app = express();
 const port = 8080;
@@ -13,6 +13,7 @@ app.get("/", (req, res) => {
 
 app.use(cors());
 app.use(bodyParser.json());
+
 app.use("/match", matchRouter);
 
 app.listen(port, () => {

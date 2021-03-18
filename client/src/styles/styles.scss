@@ -9,3 +9,18 @@
   text-align: center;
   background-color: rgb(101, 182, 230);
 }
+
+.select-form {
+  display: grid;
+  height: 80%;
+  justify-content: center;
+  align-items: center;
+  .option {
+    padding: 10px 0;
+  }
+  .select-label {
+    padding: 0 5px;
+    font-size: large;
+    color: black;
+  }
+}

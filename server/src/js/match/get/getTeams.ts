@@ -1,17 +1,18 @@
 import express from "express";
 import { PythonShell } from "python-shell";
-const matchRouter = express.Router();
 
-matchRouter.get("/", (req, res) => {
-  res.send("hello from match");
+const teamsRouter = express.Router();
+
+teamsRouter.get("/", (req, res) => {
+  res.send("hello from teams data");
 });
 
-matchRouter.post("/", (req, res) => {
+teamsRouter.post("/", (req, res) => {
   const pythonOptions = {
     args: [String(req.body.player)],
     scriptPath: "./src/python/",
   };
-  PythonShell.run("./match.py", pythonOptions, function (err, out) {
+  PythonShell.run("./teams.py", pythonOptions, function (err, out) {
     if (err) {
       res.json(err);
     }
@@ -21,4 +22,4 @@ matchRouter.post("/", (req, res) => {
   });
 });
 
-export default matchRouter;
+export default teamsRouter;

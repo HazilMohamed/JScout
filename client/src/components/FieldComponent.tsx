@@ -15,10 +15,12 @@ const FieldComponent: React.FC = () => {
   >();
 
   const fetchMatch = () => {
-    axios.post(api + "/match", { player: "Kevin De Bruyne" }).then((res) => {
-      const data = JSON.parse(res.data[0]);
-      setMatchDetails(Object.values(data));
-    });
+    axios
+      .post(api + "/match/player", { player: "Kevin De Bruyne" })
+      .then((res) => {
+        const data = JSON.parse(res.data[0]);
+        setMatchDetails(Object.values(data));
+      });
   };
 
   const generateCurve = (

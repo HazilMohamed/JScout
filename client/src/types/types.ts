@@ -21,3 +21,8 @@ export type PassDetailsTypes = {
   pass_recipient_name?: string;
   play_pattern_id?: number;
 } & BasicDetailsTypes;
+
+export type TeamType = {
+  team_id: number;
+  team_name: string;
+};
