@@ -8,7 +8,7 @@ def find_teams():
         with open('./src/json/match_lineup_brazil_belgium.json') as file:
             data = json.load(file)
         teams = pd.json_normalize(data, sep="_")
-        return teams[['team_id', 'team_name']].T.to_json()
+        return teams.T.to_json()
     except:
         return 'Something went wrong!'
     return

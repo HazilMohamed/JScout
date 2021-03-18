@@ -13,14 +13,26 @@
 .select-form {
   display: grid;
   height: 80%;
-  justify-content: center;
+  justify-content: left;
+  text-align: left;
   align-items: center;
+  margin: 0 30px;
   .option {
-    padding: 10px 0;
+    margin: 10px 0;
+    width: 100%;
+    .select-label {
+      margin: 10px 0px;
+      width: 100%;
+      display: inline-block;
+      font-size: large;
+      color: black;
+    }
+    .select-options {
+      width: 400px;
+    }
   }
-  .select-label {
-    padding: 0 5px;
-    font-size: large;
-    color: black;
+  .form-button {
+    text-align: center;
+    margin: 20px 0;
   }
 }

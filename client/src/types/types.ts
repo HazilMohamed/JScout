@@ -22,7 +22,21 @@ export type PassDetailsTypes = {
   play_pattern_id?: number;
 } & BasicDetailsTypes;
 
+export type CountryType = {
+  id: number;
+  name: string;
+};
+
+export type PlayerType = {
+  player_id: number;
+  player_name: string;
+  country: CountryType;
+  jersey_number?: number;
+  player_nickname?: string;
+};
+
 export type TeamType = {
   team_id: number;
   team_name: string;
+  lineup: Array<PlayerType>;
 };
