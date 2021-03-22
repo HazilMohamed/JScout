@@ -1,5 +1,4 @@
 import express from "express";
-import bodyParser from "body-parser";
 import cors from "cors";
 
 import matchRouter from "./match/matchRouter";
@@ -12,7 +11,7 @@ app.get("/", (req, res) => {
 });
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
 app.use("/match", matchRouter);
 
