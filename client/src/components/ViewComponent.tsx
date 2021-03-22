@@ -4,16 +4,19 @@ import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 
 import useWindowSize from "../helpers/useWindowSize";
 import FieldComponent from "../components/FieldComponent";
+import { PassDetailsTypes } from "../types/types";
 
 import "../styles/styles.scss";
 
-const ViewComponent: React.FC = () => {
+const ViewComponent: React.FC<{ passDetails?: Array<PassDetailsTypes> }> = ({
+  passDetails,
+}) => {
   const innerHeight = useWindowSize()[1];
 
   return (
     <Canvas style={{ height: innerHeight }} className="view">
       <gridHelper args={[12, 12]} />
-      <FieldComponent />
+      <FieldComponent passDetails={passDetails} />
       <PerspectiveCamera
         makeDefault
         position={[8, 4, 7]}

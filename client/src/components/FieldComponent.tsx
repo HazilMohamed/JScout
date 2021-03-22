@@ -1,28 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from "react";
-import axios from "axios";
+import React from "react";
 import { DoubleSide, Vector3, CatmullRomCurve3 } from "three";
 import { Line } from "@react-three/drei";
 
-import config from "../config";
 import { PassDetailsTypes } from "../types/types";
 import { HeightInfo, BodyInfo, PlayPatternInfo } from "../helpers/passHelpers";
 
-const FieldComponent: React.FC = () => {
-  const api = config.api;
-  const [matchDetails, setMatchDetails] = React.useState<
-    Array<PassDetailsTypes>
-  >();
-
-  const fetchMatch = () => {
-    axios
-      .post(api + "/match/player", { player: "Kevin De Bruyne" })
-      .then((res) => {
-        const data = JSON.parse(res.data[0]);
-        setMatchDetails(Object.values(data));
-      });
-  };
-
+const FieldComponent: React.FC<{ passDetails?: Array<PassDetailsTypes> }> = ({
+  passDetails,
+}) => {
   const generateCurve = (
     start: Array<number>,
     end: Array<number>,
@@ -59,10 +45,6 @@ const FieldComponent: React.FC = () => {
     ];
   };
 
-  useEffect(() => {
-    fetchMatch();
-  }, []);
-
   return (
     <mesh>
       <mesh
@@ -73,8 +55,8 @@ const FieldComponent: React.FC = () => {
         <planeGeometry />
         <meshBasicMaterial color={"green"} side={DoubleSide} />
       </mesh>
-      {matchDetails &&
-        matchDetails.map((ev: PassDetailsTypes) => (
+      {passDetails &&
+        passDetails.map((ev: PassDetailsTypes) => (
           <mesh key={ev.id} onClick={() => console.log(ev)}>
             <mesh
               position={

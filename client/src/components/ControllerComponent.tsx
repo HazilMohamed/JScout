@@ -7,7 +7,9 @@ import { TeamType, PlayerType } from "../types/types";
 
 import "../styles/styles.scss";
 
-const ControllerComponent: React.FC = () => {
+const ControllerComponent: React.FC<{ handleSubmit: Function }> = ({
+  handleSubmit,
+}) => {
   const api = config.api;
   const [teams, setTeams] = useState<Array<TeamType>>();
   const [selectedTeam, setSelectedTeam] = useState<TeamType>();
@@ -79,7 +81,11 @@ const ControllerComponent: React.FC = () => {
             </div>
           )}
           <div className="form-button">
-            <input type="button" value="Submit" />
+            <input
+              type="button"
+              value="Submit"
+              onClick={() => handleSubmit(selectedPlayer?.player_id)}
+            />
           </div>
         </form>
       </div>

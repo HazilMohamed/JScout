@@ -8,7 +8,7 @@ playerRouter.get("/", (req, res) => {
 
 playerRouter.post("/", (req, res) => {
   const pythonOptions = {
-    args: [String(req.body.player)],
+    args: [String(req.body.id)],
     scriptPath: "./src/python/",
   };
   PythonShell.run("./player.py", pythonOptions, function (err, out) {
