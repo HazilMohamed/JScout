@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
-import { DoubleSide, Vector3, CatmullRomCurve3 } from "three";
-import { Line } from "@react-three/drei";
+import { DoubleSide, Vector3, CatmullRomCurve3, Vector2 } from "three";
+import { Line, Plane, useTexture } from "@react-three/drei";
 
 import { PassDetailsTypes } from "../types/types";
 import { HeightInfo, BodyInfo, PlayPatternInfo } from "../helpers/passHelpers";
@@ -9,6 +9,9 @@ import { HeightInfo, BodyInfo, PlayPatternInfo } from "../helpers/passHelpers";
 const FieldComponent: React.FC<{ passDetails?: Array<PassDetailsTypes> }> = ({
   passDetails,
 }) => {
+  const texture = useTexture("./texture_1k.png");
+  const normal = useTexture("./normal_1k.png");
+
   const generateCurve = (
     start: Array<number>,
     end: Array<number>,
@@ -36,8 +39,8 @@ const FieldComponent: React.FC<{ passDetails?: Array<PassDetailsTypes> }> = ({
     playType?: number
   ) => {
     let isRegularPlay = playType && loc;
-    loc = BodyInfo.find((x) => x.id === loc)?.height || 0.1;
-    playType = PlayPatternInfo.find((x) => x.id === playType)?.height || 0.1;
+    loc = BodyInfo.find((x) => x.id === loc)?.height || 0.05;
+    playType = PlayPatternInfo.find((x) => x.id === playType)?.height || 0.05;
     return [
       coordinates[0] / 10 - 6,
       isRegularPlay ? loc : playType,
@@ -47,14 +50,16 @@ const FieldComponent: React.FC<{ passDetails?: Array<PassDetailsTypes> }> = ({
 
   return (
     <mesh>
-      <mesh
-        position={[0, 0, 0]}
-        scale={[12, 8, 1]}
-        rotation={[Math.PI / 2, 0, 0]}
-      >
-        <planeGeometry />
-        <meshBasicMaterial color={"green"} side={DoubleSide} />
-      </mesh>
+      <Plane args={[8, 12]} rotation={[Math.PI / 2, 0, Math.PI / 2]}>
+        <meshStandardMaterial
+          transparent={true}
+          map={texture}
+          side={DoubleSide}
+          normalMap={normal}
+          normalScale={new Vector2(5, 5)}
+        />
+      </Plane>
+
       {passDetails &&
         passDetails.map((ev: PassDetailsTypes) => (
           <mesh key={ev.id} onClick={() => console.log(ev)}>
@@ -80,7 +85,7 @@ const FieldComponent: React.FC<{ passDetails?: Array<PassDetailsTypes> }> = ({
                 ev.pass_body_part_id,
                 ev.play_pattern_id
               )}
-              flatShading={true}
+              flatShading={false}
               color={"#da5072"}
             />
           </mesh>
