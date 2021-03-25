@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
-import { DoubleSide, Vector3, CatmullRomCurve3, Vector2 } from "three";
+import { DoubleSide, Vector3, CatmullRomCurve3 } from "three";
 import { Line, Plane, useTexture } from "@react-three/drei";
 
 import { PassDetailsTypes } from "../types/types";
@@ -10,7 +10,7 @@ const FieldComponent: React.FC<{ passDetails?: Array<PassDetailsTypes> }> = ({
   passDetails,
 }) => {
   const texture = useTexture("./texture_1k.png");
-  const normal = useTexture("./normal_1k.png");
+  // const normal = useTexture("./normal_1k.png");
 
   const generateCurve = (
     start: Array<number>,
@@ -55,8 +55,8 @@ const FieldComponent: React.FC<{ passDetails?: Array<PassDetailsTypes> }> = ({
           transparent={true}
           map={texture}
           side={DoubleSide}
-          normalMap={normal}
-          normalScale={new Vector2(5, 5)}
+          // normalMap={normal}
+          // normalScale={new Vector2(5, 5)}
         />
       </Plane>
 
