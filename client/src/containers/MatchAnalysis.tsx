@@ -11,7 +11,7 @@ import { Grid, createStyles, Theme, makeStyles } from "@material-ui/core";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     grid: {
-      padding: theme.spacing(3),
+      paddingBlock: theme.spacing(5),
     },
   })
 );
@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const MatchAnalysis = () => {
   const api = config.api;
   const [passDetails, setPassDetails] = useState<Array<PassDetailsTypes>>();
+  const [selectedPass, setSelectedPass] = useState<PassDetailsTypes>();
   const styles = useStyles();
 
   const handleSubmit = (id: number) => {
@@ -28,13 +29,26 @@ const MatchAnalysis = () => {
     });
   };
 
+  const getPassData = (ev: PassDetailsTypes) => {
+    setSelectedPass(ev);
+  };
+  console.log(passDetails);
   return (
-    <Grid container xs={12} justify={"center"}>
-      <Grid xs={9} className={styles.grid} item>
-        <ViewComponent passDetails={passDetails} />
+    <Grid
+      container
+      xs={12}
+      className={styles.grid}
+      justify={"space-between"}
+      spacing={5}
+    >
+      <Grid xs={9} item>
+        <ViewComponent passDetails={passDetails} getPassData={getPassData} />
       </Grid>
-      <Grid xs={3} className={styles.grid} item>
-        <ControllerComponent handleSubmit={handleSubmit} />
+      <Grid xs={3} item>
+        <ControllerComponent
+          handleSubmit={handleSubmit}
+          passData={selectedPass}
+        />
       </Grid>
     </Grid>
   );

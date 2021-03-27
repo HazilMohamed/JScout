@@ -1,16 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from "react";
+import React, { useState } from "react";
 import { DoubleSide, Vector3, CatmullRomCurve3 } from "three";
 import { Line, Plane, useTexture } from "@react-three/drei";
 
 import { PassDetailsTypes } from "../types/types";
 import { HeightInfo, BodyInfo, PlayPatternInfo } from "../helpers/passHelpers";
 
-const FieldComponent: React.FC<{ passDetails?: Array<PassDetailsTypes> }> = ({
-  passDetails,
-}) => {
+const FieldComponent: React.FC<{
+  getPassData: Function;
+  passDetails?: Array<PassDetailsTypes>;
+}> = ({ passDetails, getPassData }) => {
   const texture = useTexture("./texture_1k.png");
   // const normal = useTexture("./normal_1k.png");
+  const [selectedPass, setSelectedPass] = useState<string>();
 
   const generateCurve = (
     start: Array<number>,
@@ -48,6 +50,11 @@ const FieldComponent: React.FC<{ passDetails?: Array<PassDetailsTypes> }> = ({
     ];
   };
 
+  const handlePassSelection = (ev: PassDetailsTypes) => {
+    getPassData(ev);
+    setSelectedPass(ev.id);
+  };
+
   return (
     <mesh>
       <Plane args={[8, 12]} rotation={[Math.PI / 2, 0, Math.PI / 2]}>
@@ -62,7 +69,7 @@ const FieldComponent: React.FC<{ passDetails?: Array<PassDetailsTypes> }> = ({
 
       {passDetails &&
         passDetails.map((ev: PassDetailsTypes) => (
-          <mesh key={ev.id} onClick={() => console.log(ev)}>
+          <mesh key={ev.id} onClick={() => handlePassSelection(ev)}>
             <mesh
               position={
                 new Vector3(
@@ -75,7 +82,9 @@ const FieldComponent: React.FC<{ passDetails?: Array<PassDetailsTypes> }> = ({
               }
             >
               <sphereGeometry args={[0.05]} />
-              <meshBasicMaterial color={"red"} />
+              <meshBasicMaterial
+                color={ev.id === selectedPass ? "blue" : "red"}
+              />
             </mesh>
             <Line
               points={generateCurve(
@@ -86,7 +95,7 @@ const FieldComponent: React.FC<{ passDetails?: Array<PassDetailsTypes> }> = ({
                 ev.play_pattern_id
               )}
               flatShading={false}
-              color={"#da5072"}
+              color={ev.id === selectedPass ? "#c3e9a0" : "#da5072"}
             />
           </mesh>
         ))}

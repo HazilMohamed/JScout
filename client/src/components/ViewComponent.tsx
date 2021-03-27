@@ -7,11 +7,12 @@ import { PassDetailsTypes } from "../types/types";
 
 import { Card } from "@material-ui/core";
 
-const ViewComponent: React.FC<{ passDetails?: Array<PassDetailsTypes> }> = ({
-  passDetails,
-}) => {
+const ViewComponent: React.FC<{
+  getPassData: Function;
+  passDetails?: Array<PassDetailsTypes>;
+}> = ({ passDetails, getPassData }) => {
   return (
-    <Card style={{ height: "930px" }}>
+    <Card style={{ height: "815px" }}>
       <Canvas invalidateFrameloop>
         <Suspense fallback={null}>
           <ambientLight color={"grey"} />
@@ -22,7 +23,7 @@ const ViewComponent: React.FC<{ passDetails?: Array<PassDetailsTypes> }> = ({
             intensity={5}
             onUpdate={(self) => self.lookAt(0, 0, 0)}
           />
-          <FieldComponent passDetails={passDetails} />
+          <FieldComponent passDetails={passDetails} getPassData={getPassData} />
           <PerspectiveCamera
             makeDefault
             position={[8, 4, 7]}

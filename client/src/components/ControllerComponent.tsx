@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 import config from "../config";
-import { TeamType, PlayerType } from "../types/types";
+import { TeamType, PlayerType, PassDetailsTypes } from "../types/types";
+import { HeightInfo, PlayPatternInfo } from "../helpers/passHelpers";
 
 import {
   Grid,
@@ -15,7 +16,9 @@ import {
   createStyles,
   Theme,
   makeStyles,
+  Typography,
 } from "@material-ui/core";
+import { ArrowForward } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "grid",
     },
     grid: {
+      display: "block",
       padding: theme.spacing(1),
     },
     paperForm: {
@@ -46,12 +50,23 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: "left",
       padding: theme.spacing(2),
     },
+    paperContent: {
+      textAlign: "left",
+      margin: 10,
+      "& h3": {
+        textAlign: "center",
+      },
+      "& span": {
+        fontWeight: "bold",
+      },
+    },
   })
 );
 
-const ControllerComponent: React.FC<{ handleSubmit: Function }> = ({
-  handleSubmit,
-}) => {
+const ControllerComponent: React.FC<{
+  handleSubmit: Function;
+  passData?: PassDetailsTypes;
+}> = ({ handleSubmit, passData }) => {
   const api = config.api;
   const styles = useStyles();
   const [teams, setTeams] = useState<Array<TeamType>>();
@@ -86,9 +101,12 @@ const ControllerComponent: React.FC<{ handleSubmit: Function }> = ({
   return (
     <Paper className={styles.controller}>
       <h1>JScout</h1>
-      <Grid direction={"column"} xs={12} justify={"center"}>
+      <Grid direction={"row"} justify={"space-around"} xs={12}>
         <Grid xs={12} item className={styles.grid}>
-          <Paper className={styles.paperForm} style={{}}>
+          <Paper
+            className={styles.paperForm}
+            style={{ height: passData ? "350px" : "720px" }}
+          >
             <form className={styles.form}>
               {teams && (
                 <div className={styles.items}>
@@ -150,6 +168,44 @@ const ControllerComponent: React.FC<{ handleSubmit: Function }> = ({
             </form>
           </Paper>
         </Grid>
+        {passData && (
+          <Grid xs={12} item className={styles.grid}>
+            <Paper className={styles.paperForm} style={{ height: "350px" }}>
+              <Typography className={styles.paperContent}>
+                <h3>Pass Data</h3>
+                Pass Location: <span>{`(${passData.location})`}</span>
+                <ArrowForward fontSize={"inherit"} />
+                <span>{`(${passData?.pass_end_location})`}</span>
+                <br />
+                Pass Recieved by <span>{passData?.pass_recipient_name}</span>
+                <br />
+                Time: <span>{passData?.timestamp}</span>
+                <br />
+                Period:{" "}
+                <span>{`${
+                  passData?.period === 1 ? "First" : "Second"
+                }  Half`}</span>
+                <br />
+                Play Pattern:{" "}
+                <span>
+                  {
+                    PlayPatternInfo.find(
+                      (x) => x.id === passData?.play_pattern_id
+                    )?.name
+                  }
+                </span>
+                <br />
+                Pass Height:{" "}
+                <span>
+                  {
+                    HeightInfo.find((x) => x.id === passData?.pass_height_id)
+                      ?.name
+                  }
+                </span>
+              </Typography>
+            </Paper>
+          </Grid>
+        )}
       </Grid>
     </Paper>
   );
