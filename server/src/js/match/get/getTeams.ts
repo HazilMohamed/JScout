@@ -9,7 +9,6 @@ teamsRouter.get("/", (req, res) => {
 
 teamsRouter.post("/", (req, res) => {
   const pythonOptions = {
-    args: [String(req.body.player)],
     scriptPath: "./src/python/",
   };
   PythonShell.run("./teams.py", pythonOptions, function (err, out) {

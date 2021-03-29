@@ -105,3 +105,6 @@ dist
 
 # JSON files
 match_*.json
+
+# Open Data source
+open-data/
