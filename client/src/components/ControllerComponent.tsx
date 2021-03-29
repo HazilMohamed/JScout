@@ -80,7 +80,7 @@ const ControllerComponent: React.FC<{
   const [selectedPlayer, setSelectedPlayer] = useState<PlayerType>();
 
   const fetchLineUp = () => {
-    axios.post(api + "/match/teams").then((res) => {
+    axios.post(api + "/match/lineups").then((res) => {
       const data = JSON.parse(res.data[0]);
       const fetched: Array<TeamType> = Object.values(data);
       setTeams(fetched);

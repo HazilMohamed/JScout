@@ -3,7 +3,7 @@ import json
 import sys
 
 
-def find_teams():
+def get_lineups():
     try:
         with open('./src/json/match_lineup_brazil_belgium.json') as file:
             data = json.load(file)
@@ -15,4 +15,4 @@ def find_teams():
 
 
 if __name__ == "__main__":
-    print(find_teams())
+    print(get_lineups())

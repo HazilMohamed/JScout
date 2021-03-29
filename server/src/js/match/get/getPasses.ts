@@ -1,17 +1,17 @@
 import express from "express";
 import { PythonShell } from "python-shell";
-const playerRouter = express.Router();
+const passesRouter = express.Router();
 
-playerRouter.get("/", (req, res) => {
-  res.send("hello from player data");
+passesRouter.get("/", (req, res) => {
+  res.send("hello from passes");
 });
 
-playerRouter.post("/", (req, res) => {
+passesRouter.post("/", (req, res) => {
   const pythonOptions = {
     args: [String(req.body.id)],
     scriptPath: "./src/python/",
   };
-  PythonShell.run("./player.py", pythonOptions, function (err, out) {
+  PythonShell.run("./getPasses.py", pythonOptions, function (err, out) {
     if (err) {
       res.json(err);
     }
@@ -21,4 +21,4 @@ playerRouter.post("/", (req, res) => {
   });
 });
 
-export default playerRouter;
+export default passesRouter;

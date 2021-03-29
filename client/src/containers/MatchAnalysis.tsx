@@ -23,7 +23,7 @@ const MatchAnalysis = () => {
   const styles = useStyles();
 
   const handleSubmit = (id: number) => {
-    axios.post(api + "/match/player", { id: id }).then((res) => {
+    axios.post(api + "/match/passes", { id: id }).then((res) => {
       const data = JSON.parse(res.data[0]);
       setPassDetails(Object.values(data));
     });
