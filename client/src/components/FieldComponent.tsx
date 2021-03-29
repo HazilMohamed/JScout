@@ -21,15 +21,12 @@ const FieldComponent: React.FC<{
     body?: number,
     playType?: number
   ) => {
-    let mid = findLocation(
-      [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2],
-      height
-    );
-    height = HeightInfo.find((x) => x.id === height)?.height || 0.1;
+    let mid = findLocation([(start[0] + end[0]) / 2, (start[1] + end[1]) / 2]);
+    height = HeightInfo.find((x) => x.id === height)?.height || 0.05;
     const curve = new CatmullRomCurve3([
       new Vector3(...findLocation(start, body, playType)),
       new Vector3(mid[0], height, mid[2]),
-      new Vector3(...findLocation(end, body)),
+      new Vector3(...findLocation(end, body, playType, height)),
     ]);
 
     return curve.getPoints(25);
@@ -37,15 +34,16 @@ const FieldComponent: React.FC<{
 
   const findLocation = (
     coordinates: Array<number>,
-    loc?: number,
-    playType?: number
+    body?: number,
+    playType?: number,
+    passHeight?: number
   ) => {
-    let isRegularPlay = playType && loc;
-    loc = BodyInfo.find((x) => x.id === loc)?.height || 0.05;
-    playType = PlayPatternInfo.find((x) => x.id === playType)?.height || 0.05;
+    body = BodyInfo.find((x) => x.id === body)?.height;
+    playType = PlayPatternInfo.find((x) => x.id === playType)?.height;
+    let isThrow = !body && playType === 0.5;
     return [
       coordinates[0] / 10 - 6,
-      isRegularPlay ? loc : playType,
+      isThrow ? (passHeight ? passHeight : playType) : body,
       coordinates[1] / 10 - 4,
     ];
   };
@@ -95,7 +93,7 @@ const FieldComponent: React.FC<{
                 ev.play_pattern_id
               )}
               flatShading={false}
-              color={ev.id === selectedPass ? "#c3e9a0" : "#da5072"}
+              color={ev.id === selectedPass ? "#e6d822" : "#da5072"}
             />
           </mesh>
         ))}

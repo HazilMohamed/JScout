@@ -1,7 +1,7 @@
 export const HeightInfo = [
   { id: 1, name: "Ground Pass", height: 0.05 },
-  { id: 2, name: "Low Pass", height: 0.35 },
-  { id: 3, name: "High Pass", height: 0.7 },
+  { id: 2, name: "Low Pass", height: 0.3 },
+  { id: 3, name: "High Pass", height: 0.6 },
 ];
 
 export const BodyInfo = [
@@ -18,7 +18,10 @@ export const PlayPatternInfo = [
   { id: 1, name: "From Corner", height: 0.05 },
   { id: 2, name: "From Corner", height: 0.05 },
   { id: 3, name: "From Free Kick", height: 0.05 },
-  { id: 4, name: "From Throw In", height: 0.6 },
+  { id: 4, name: "From Throw In", height: 0.5 },
   { id: 5, name: "Other", height: 0.05 },
   { id: 6, name: "From Counter", height: 0.05 },
+  { id: 7, name: "From Goal Kick", height: 0.05 },
+  { id: 8, name: "From Keeper", height: 0.05 },
+  { id: 9, name: "From Kick Off", height: 0.05 },
 ];

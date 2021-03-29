@@ -5,14 +5,17 @@ import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import FieldComponent from "../components/FieldComponent";
 import { PassDetailsTypes } from "../types/types";
 
-import { Card } from "@material-ui/core";
+import { Paper } from "@material-ui/core";
 
 const ViewComponent: React.FC<{
   getPassData: Function;
   passDetails?: Array<PassDetailsTypes>;
 }> = ({ passDetails, getPassData }) => {
   return (
-    <Card style={{ height: "815px" }}>
+    <Paper
+      style={{ height: "815px", backgroundColor: "#f5f4db" }}
+      elevation={5}
+    >
       <Canvas invalidateFrameloop>
         <Suspense fallback={null}>
           <ambientLight color={"grey"} />
@@ -32,7 +35,7 @@ const ViewComponent: React.FC<{
           <OrbitControls enableKeys={true} enableRotate={true} />
         </Suspense>
       </Canvas>
-    </Card>
+    </Paper>
   );
 };
 

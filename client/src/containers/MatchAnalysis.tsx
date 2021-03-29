@@ -32,7 +32,7 @@ const MatchAnalysis = () => {
   const getPassData = (ev: PassDetailsTypes) => {
     setSelectedPass(ev);
   };
-  console.log(passDetails);
+
   return (
     <Grid
       container

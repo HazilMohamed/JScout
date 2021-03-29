@@ -4,7 +4,7 @@ import axios from "axios";
 
 import config from "../config";
 import { TeamType, PlayerType, PassDetailsTypes } from "../types/types";
-import { HeightInfo, PlayPatternInfo } from "../helpers/passHelpers";
+import { BodyInfo, HeightInfo, PlayPatternInfo } from "../helpers/passHelpers";
 
 import {
   Grid,
@@ -23,19 +23,20 @@ import { ArrowForward } from "@material-ui/icons";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     controller: {
-      backgroundColor: "#9c7474",
+      backgroundColor: "#dad873",
       textAlign: "center",
       display: "grid",
     },
     grid: {
       display: "block",
-      padding: theme.spacing(1),
+      padding: theme.spacing(2),
     },
     paperForm: {
       display: "block",
       alignItems: "left",
       justifyContent: "left",
       padding: theme.spacing(2),
+      backgroundColor: "#454d66",
     },
     form: {
       display: "flex",
@@ -50,7 +51,12 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: "left",
       padding: theme.spacing(2),
     },
+    formText: {
+      padding: "3px 0",
+      color: "#efeeb4",
+    },
     paperContent: {
+      color: "#efeeb4",
       textAlign: "left",
       margin: 10,
       "& h3": {
@@ -99,18 +105,19 @@ const ControllerComponent: React.FC<{
   }, []);
 
   return (
-    <Paper className={styles.controller}>
+    <Paper elevation={5} className={styles.controller}>
       <h1>JScout</h1>
       <Grid direction={"row"} justify={"space-around"} xs={12}>
         <Grid xs={12} item className={styles.grid}>
           <Paper
+            elevation={3}
             className={styles.paperForm}
-            style={{ height: passData ? "350px" : "720px" }}
+            style={{ height: passData ? "320px" : "700px" }}
           >
             <form className={styles.form}>
               {teams && (
                 <div className={styles.items}>
-                  <InputLabel style={{ padding: "3px 0" }} id="team-label">
+                  <InputLabel className={styles.formText} id="team-label">
                     Team
                   </InputLabel>
                   <Select
@@ -119,6 +126,7 @@ const ControllerComponent: React.FC<{
                     labelId="team-label"
                     value={selectedTeam?.team_id || teams[0].team_id}
                     onChange={(ev) => changeTeam(ev.target.value)}
+                    className={styles.formText}
                   >
                     {teams.map((team: TeamType) => (
                       <MenuItem key={team.team_id} value={team.team_id}>
@@ -130,7 +138,7 @@ const ControllerComponent: React.FC<{
               )}
               {selectedTeam && (
                 <div className={styles.items}>
-                  <InputLabel style={{ padding: "3px 0" }} id="players-label">
+                  <InputLabel className={styles.formText} id="players-label">
                     Player
                   </InputLabel>
                   <Select
@@ -142,6 +150,7 @@ const ControllerComponent: React.FC<{
                       selectedTeam.lineup[0].player_id
                     }
                     onChange={(ev) => changePlayer(ev.target.value)}
+                    className={styles.formText}
                   >
                     {selectedTeam.lineup.map((player) => (
                       <MenuItem key={player.player_id} value={player.player_id}>
@@ -170,14 +179,18 @@ const ControllerComponent: React.FC<{
         </Grid>
         {passData && (
           <Grid xs={12} item className={styles.grid}>
-            <Paper className={styles.paperForm} style={{ height: "350px" }}>
+            <Paper
+              elevation={3}
+              className={styles.paperForm}
+              style={{ height: "350px" }}
+            >
               <Typography className={styles.paperContent}>
                 <h3>Pass Data</h3>
                 Pass Location: <span>{`(${passData.location})`}</span>
                 <ArrowForward fontSize={"inherit"} />
                 <span>{`(${passData?.pass_end_location})`}</span>
                 <br />
-                Pass Recieved by <span>{passData?.pass_recipient_name}</span>
+                Recipient: <span>{passData?.pass_recipient_name}</span>
                 <br />
                 Time: <span>{passData?.timestamp}</span>
                 <br />
@@ -199,6 +212,14 @@ const ControllerComponent: React.FC<{
                 <span>
                   {
                     HeightInfo.find((x) => x.id === passData?.pass_height_id)
+                      ?.name
+                  }
+                </span>
+                <br />
+                Body Part:{" "}
+                <span>
+                  {
+                    BodyInfo.find((x) => x.id === passData?.pass_body_part_id)
                       ?.name
                   }
                 </span>
