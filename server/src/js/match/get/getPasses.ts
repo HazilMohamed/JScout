@@ -8,7 +8,7 @@ passesRouter.get("/", (req, res) => {
 
 passesRouter.post("/", (req, res) => {
   const pythonOptions = {
-    args: [String(req.body.id)],
+    args: [String(req.body.matchId), String(req.body.playerId)],
     scriptPath: "./src/python/",
   };
   PythonShell.run("./getPasses.py", pythonOptions, function (err, out) {

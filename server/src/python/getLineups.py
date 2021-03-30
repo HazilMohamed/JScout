@@ -2,17 +2,19 @@ import pandas as pd
 import json
 import sys
 
+match_id = int(sys.argv[1])
 
-def get_lineups():
+
+def get_lineups(match_id):
     try:
-        with open('./src/json/match_lineup_brazil_belgium.json') as file:
+        with open(f'./src/open-data/data/lineups/{match_id}.json') as file:
             data = json.load(file)
-        teams = pd.json_normalize(data, sep="_")
-        return teams.T.to_json()
+        lineups = pd.json_normalize(data, sep="_")
+        return lineups.T.to_json()
     except:
         return 'Something went wrong!'
     return
 
 
 if __name__ == "__main__":
-    print(get_lineups())
+    print(get_lineups(match_id))

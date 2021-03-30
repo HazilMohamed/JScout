@@ -9,8 +9,8 @@ def get_competitions():
             data = json.load(file)
         comps = pd.json_normalize(data, sep="_")
         comps = comps[['competition_id', 'competition_name']]
-        gr = comps.groupby(['competition_id'])
-        return gr.first().to_json()
+        grouped = comps.groupby(['competition_id'])
+        return grouped.first().reset_index().T.to_json()
     except:
         return 'Something went wrong!'
 

@@ -11,7 +11,8 @@ import { Grid, createStyles, Theme, makeStyles } from "@material-ui/core";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     grid: {
-      paddingBlock: theme.spacing(5),
+      flexGrow: 1,
+      padding: theme.spacing(5),
     },
   })
 );
@@ -22,11 +23,13 @@ const MatchAnalysis = () => {
   const [selectedPass, setSelectedPass] = useState<PassDetailsTypes>();
   const styles = useStyles();
 
-  const handleSubmit = (id: number) => {
-    axios.post(api + "/match/passes", { id: id }).then((res) => {
-      const data = JSON.parse(res.data[0]);
-      setPassDetails(Object.values(data));
-    });
+  const handleSubmit = (matchId: number, playerId: number) => {
+    axios
+      .post(api + "/match/passes", { matchId: matchId, playerId: playerId })
+      .then((res) => {
+        const data = JSON.parse(res.data[0]);
+        setPassDetails(Object.values(data));
+      });
   };
 
   const getPassData = (ev: PassDetailsTypes) => {
@@ -34,14 +37,8 @@ const MatchAnalysis = () => {
   };
 
   return (
-    <Grid
-      container
-      xs={12}
-      className={styles.grid}
-      justify={"space-between"}
-      spacing={5}
-    >
-      <Grid xs={9} item>
+    <Grid container className={styles.grid} justify={"space-evenly"}>
+      <Grid xs={8} item>
         <ViewComponent passDetails={passDetails} getPassData={getPassData} />
       </Grid>
       <Grid xs={3} item>

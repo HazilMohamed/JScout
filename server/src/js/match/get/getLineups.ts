@@ -9,6 +9,7 @@ lineupsRouter.get("/", (req, res) => {
 
 lineupsRouter.post("/", (req, res) => {
   const pythonOptions = {
+    args: [String(req.body.matchId)],
     scriptPath: "./src/python/",
   };
   PythonShell.run("./getLineups.py", pythonOptions, function (err, out) {
