@@ -3,7 +3,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 import config from "../config";
-import { TeamType, PlayerType, PassDetailsTypes } from "../types/types";
+import {
+  CompetitionType,
+  SeasonType,
+  MatchType,
+  TeamType,
+  PlayerType,
+  PassDetailsTypes,
+} from "../types/types";
 import { BodyInfo, HeightInfo, PlayPatternInfo } from "../helpers/passHelpers";
 
 import {
@@ -20,11 +27,11 @@ import { ArrowForward } from "@material-ui/icons";
 import useStyles from "../styles/ControllerStyles";
 
 interface SelectedOptions {
-  competition?: any;
-  season?: any;
-  match?: any;
-  team?: TeamType;
-  player?: PlayerType;
+  competition?: CompetitionType | undefined;
+  season?: SeasonType | undefined;
+  match?: MatchType | undefined;
+  team?: TeamType | undefined;
+  player?: PlayerType | undefined;
 }
 
 const ControllerComponent: React.FC<{
@@ -33,16 +40,16 @@ const ControllerComponent: React.FC<{
 }> = ({ handleSubmit, passData }) => {
   const api = config.api;
   const styles = useStyles();
-  const [competitions, setCompetitions] = useState<Array<any>>();
-  const [seasons, setSeasons] = useState<Array<any>>();
-  const [matches, setMatches] = useState<Array<any>>();
+  const [competitions, setCompetitions] = useState<Array<CompetitionType>>();
+  const [seasons, setSeasons] = useState<Array<SeasonType>>();
+  const [matches, setMatches] = useState<Array<MatchType>>();
   const [teams, setTeams] = useState<Array<TeamType>>();
   const [selectedOptions, setSelectedOptions] = useState<SelectedOptions>();
 
   const fetchCompetitions = () => {
     axios.post(api + "/match/competitions").then((res) => {
       const data = JSON.parse(res.data[0]);
-      const fetched = Object.values(data);
+      const fetched: Array<CompetitionType> = Object.values(data);
       setCompetitions(fetched);
     });
   };
@@ -50,11 +57,11 @@ const ControllerComponent: React.FC<{
   const fetchSeasons = () => {
     axios
       .post(api + "/match/seasons", {
-        compId: selectedOptions?.competition.competition_id,
+        compId: selectedOptions?.competition?.competition_id,
       })
       .then((res) => {
         const data = JSON.parse(res.data[0]);
-        const fetched = Object.values(data);
+        const fetched: Array<SeasonType> = Object.values(data);
         setSeasons(fetched);
       });
   };
@@ -62,12 +69,12 @@ const ControllerComponent: React.FC<{
   const fetchMatches = () => {
     axios
       .post(api + "/match/matches", {
-        compId: selectedOptions?.competition.competition_id,
-        seasonId: selectedOptions?.season.season_id,
+        compId: selectedOptions?.competition?.competition_id,
+        seasonId: selectedOptions?.season?.season_id,
       })
       .then((res) => {
         const data = JSON.parse(res.data[0]);
-        const fetched = Object.values(data);
+        const fetched: Array<MatchType> = Object.values(data);
         setMatches(fetched);
       });
   };
@@ -75,7 +82,7 @@ const ControllerComponent: React.FC<{
   const fetchLineUp = () => {
     axios
       .post(api + "/match/lineups", {
-        matchId: selectedOptions?.match.match_id,
+        matchId: selectedOptions?.match?.match_id,
       })
       .then((res) => {
         const data = JSON.parse(res.data[0]);
@@ -84,45 +91,24 @@ const ControllerComponent: React.FC<{
       });
   };
 
-  const changeCompetition = (id: string | unknown) => {
-    const comp = competitions?.find((x) => x.competition_id === Number(id));
+  const changeOptions = (name: any, value: string | unknown) => {
+    let newValue;
+    if (name === "competition") {
+      newValue = competitions?.find((x) => x.competition_id === Number(value));
+    } else if (name === "season") {
+      newValue = seasons?.find((x) => x.season_id === Number(value));
+    } else if (name === "match") {
+      newValue = matches?.find((x) => x.match_id === Number(value));
+    } else if (name === "team") {
+      newValue = teams?.find((x) => x.team_id === Number(value));
+    } else if (name === "player") {
+      newValue = selectedOptions?.team?.lineup.find(
+        (x) => x.player_id === value
+      );
+    }
     setSelectedOptions({
       ...selectedOptions,
-      competition: comp,
-    });
-  };
-
-  const changeSeason = (id: string | unknown) => {
-    const season = seasons?.find((x) => x.season_id === Number(id));
-    setSelectedOptions({
-      ...selectedOptions,
-      season: season,
-    });
-  };
-
-  const changeMatch = (id: string | unknown) => {
-    const match = matches?.find((x) => x.match_id === Number(id));
-    setSelectedOptions({
-      ...selectedOptions,
-      match: match,
-    });
-  };
-
-  const changeTeam = (id: string | unknown) => {
-    const team = teams?.find((x) => x.team_id === Number(id));
-    setSelectedOptions({
-      ...selectedOptions,
-      team: team,
-    });
-  };
-
-  const changePlayer = (id: string | unknown) => {
-    const newPlayer = selectedOptions?.team?.lineup.find(
-      (x) => x.player_id === id
-    );
-    setSelectedOptions({
-      ...selectedOptions,
-      player: newPlayer,
+      [name]: newValue,
     });
   };
 
@@ -134,27 +120,29 @@ const ControllerComponent: React.FC<{
     if (selectedOptions?.competition) {
       fetchSeasons();
     }
+  }, [selectedOptions?.competition]);
+
+  useEffect(() => {
     if (selectedOptions?.season) {
       fetchMatches();
     }
+  }, [selectedOptions?.season]);
+
+  useEffect(() => {
     if (selectedOptions?.match) {
       fetchLineUp();
     }
-  }, [
-    selectedOptions?.competition,
-    selectedOptions?.season,
-    selectedOptions?.match,
-  ]);
+  }, [selectedOptions?.match]);
 
   return (
     <Paper elevation={5} className={styles.controller}>
-      <h1>JScout</h1>
-      <Grid container direction={"row"} justify={"space-around"}>
+      <Typography className={styles.header}>JScout</Typography>
+      <Grid container justify={"space-around"}>
         <Grid xs={12} item className={styles.grid}>
           <Paper
             elevation={3}
             className={styles.paperForm}
-            style={{ height: passData ? "320px" : "700px" }}
+            style={{ height: passData ? "320px" : "710px" }}
           >
             <form className={styles.form}>
               {competitions && (
@@ -169,11 +157,17 @@ const ControllerComponent: React.FC<{
                     id="competition"
                     name="competition"
                     labelId="competition-label"
-                    value={selectedOptions?.competition?.competition_id}
-                    onChange={(ev) => changeCompetition(ev.target.value)}
+                    value={selectedOptions?.competition?.competition_id || ""}
+                    onChange={(ev) =>
+                      changeOptions(ev.target.name, ev.target.value)
+                    }
+                    displayEmpty
                     className={styles.formText}
                   >
-                    {competitions.map((comp: any) => (
+                    <MenuItem value="" disabled>
+                      Select a Competition
+                    </MenuItem>
+                    {competitions.map((comp: CompetitionType) => (
                       <MenuItem
                         key={comp.competition_id}
                         value={comp.competition_id}
@@ -193,11 +187,17 @@ const ControllerComponent: React.FC<{
                     id="season"
                     name="season"
                     labelId="season-label"
-                    value={selectedOptions.season?.season_id}
-                    onChange={(ev) => changeSeason(ev.target.value)}
+                    value={selectedOptions.season?.season_id || ""}
+                    onChange={(ev) =>
+                      changeOptions(ev.target.name, ev.target.value)
+                    }
+                    displayEmpty
                     className={styles.formText}
                   >
-                    {seasons.map((season: any) => (
+                    <MenuItem value="" disabled>
+                      Select a Season
+                    </MenuItem>
+                    {seasons.map((season: SeasonType) => (
                       <MenuItem key={season.season_id} value={season.season_id}>
                         {season.season_name}
                       </MenuItem>
@@ -207,18 +207,24 @@ const ControllerComponent: React.FC<{
               )}
               {selectedOptions?.season && matches && (
                 <div className={styles.items}>
-                  <InputLabel className={styles.formText} id="matches-label">
-                    Matches
+                  <InputLabel className={styles.formText} id="match-label">
+                    Match
                   </InputLabel>
                   <Select
-                    id="matches"
-                    name="matches"
-                    labelId="matches-label"
-                    value={selectedOptions.match?.match_id}
-                    onChange={(ev) => changeMatch(ev.target.value)}
+                    id="match"
+                    name="match"
+                    labelId="match-label"
+                    value={selectedOptions.match?.match_id || ""}
+                    onChange={(ev) =>
+                      changeOptions(ev.target.name, ev.target.value)
+                    }
+                    displayEmpty
                     className={styles.formText}
                   >
-                    {matches.map((match) => (
+                    <MenuItem value="" disabled>
+                      Select a Match
+                    </MenuItem>
+                    {matches.map((match: MatchType) => (
                       <MenuItem key={match.match_id} value={match.match_id}>
                         {`${match.home_team_home_team_name} vs ${match.away_team_away_team_name}`}
                       </MenuItem>
@@ -235,10 +241,16 @@ const ControllerComponent: React.FC<{
                     id="team"
                     name="team"
                     labelId="team-label"
-                    value={selectedOptions.team?.team_id}
-                    onChange={(ev) => changeTeam(ev.target.value)}
+                    value={selectedOptions.team?.team_id || ""}
+                    onChange={(ev) =>
+                      changeOptions(ev.target.name, ev.target.value)
+                    }
+                    displayEmpty
                     className={styles.formText}
                   >
+                    <MenuItem value="" disabled>
+                      Select a Team
+                    </MenuItem>
                     {teams.map((team: TeamType) => (
                       <MenuItem key={team.team_id} value={team.team_id}>
                         {team.team_name}
@@ -249,17 +261,23 @@ const ControllerComponent: React.FC<{
               )}
               {selectedOptions?.team && (
                 <div className={styles.items}>
-                  <InputLabel className={styles.formText} id="players-label">
+                  <InputLabel className={styles.formText} id="player-label">
                     Player
                   </InputLabel>
                   <Select
-                    id="players"
-                    name="players"
-                    labelId="players-label"
-                    value={selectedOptions.player?.player_id}
-                    onChange={(ev) => changePlayer(ev.target.value)}
+                    id="player"
+                    name="player"
+                    labelId="player-label"
+                    value={selectedOptions.player?.player_id || ""}
+                    onChange={(ev) =>
+                      changeOptions(ev.target.name, ev.target.value)
+                    }
+                    displayEmpty
                     className={styles.formText}
                   >
+                    <MenuItem value="" disabled>
+                      Select a Player
+                    </MenuItem>
                     {selectedOptions.team.lineup.map((player) => (
                       <MenuItem key={player.player_id} value={player.player_id}>
                         {player.player_name}
@@ -297,8 +315,8 @@ const ControllerComponent: React.FC<{
               className={styles.paperForm}
               style={{ height: "350px" }}
             >
+              <h3>Pass Data</h3>
               <Typography className={styles.paperContent}>
-                <h3>Pass Data</h3>
                 Pass Location: <span>{`(${passData.location})`}</span>
                 <ArrowForward fontSize={"inherit"} />
                 <span>{`(${passData?.pass_end_location})`}</span>

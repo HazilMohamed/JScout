@@ -11,7 +11,6 @@ import { Grid, createStyles, Theme, makeStyles } from "@material-ui/core";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     grid: {
-      flexGrow: 1,
       padding: theme.spacing(5),
     },
   })

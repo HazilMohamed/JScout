@@ -40,3 +40,19 @@ export type TeamType = {
   team_name: string;
   lineup: Array<PlayerType>;
 };
+
+export type CompetitionType = {
+  competition_id: number;
+  competition_name: string;
+};
+
+export type SeasonType = {
+  season_id: number;
+  season_name: string;
+} & CompetitionType;
+
+export type MatchType = {
+  match_id: number;
+  home_team_home_team_name: string;
+  away_team_away_team_name: string;
+};

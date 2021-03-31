@@ -5,7 +5,12 @@ const useStyles = makeStyles((theme: Theme) =>
     controller: {
       backgroundColor: "#dad873",
       textAlign: "center",
-      display: "grid",
+    },
+    header: {
+      fontSize: "1.7rem",
+      fontWeight: 800,
+      margin: 0,
+      padding: theme.spacing(2),
     },
     grid: {
       display: "block",
@@ -17,6 +22,7 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: "left",
       padding: theme.spacing(2),
       backgroundColor: "#454d66",
+      overflow: "auto",
     },
     form: {
       display: "flex",
