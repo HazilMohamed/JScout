@@ -34,6 +34,14 @@ interface SelectedOptions {
   player?: PlayerType | undefined;
 }
 
+const initialSelectedOptions: SelectedOptions = {
+  competition: undefined,
+  season: undefined,
+  match: undefined,
+  team: undefined,
+  player: undefined,
+};
+
 const ControllerComponent: React.FC<{
   handleSubmit: Function;
   passData?: PassDetailsTypes;
@@ -44,7 +52,9 @@ const ControllerComponent: React.FC<{
   const [seasons, setSeasons] = useState<Array<SeasonType>>();
   const [matches, setMatches] = useState<Array<MatchType>>();
   const [teams, setTeams] = useState<Array<TeamType>>();
-  const [selectedOptions, setSelectedOptions] = useState<SelectedOptions>();
+  const [selectedOptions, setSelectedOptions] = useState<SelectedOptions>(
+    initialSelectedOptions
+  );
 
   const fetchCompetitions = () => {
     axios.post(api + "/match/competitions").then((res) => {
@@ -93,23 +103,47 @@ const ControllerComponent: React.FC<{
 
   const changeOptions = (name: any, value: string | unknown) => {
     let newValue;
+
     if (name === "competition") {
       newValue = competitions?.find((x) => x.competition_id === Number(value));
+      setSelectedOptions({ ...initialSelectedOptions, competition: newValue });
     } else if (name === "season") {
       newValue = seasons?.find((x) => x.season_id === Number(value));
+      setSelectedOptions({
+        ...initialSelectedOptions,
+        competition: selectedOptions.competition,
+        season: newValue,
+      });
     } else if (name === "match") {
       newValue = matches?.find((x) => x.match_id === Number(value));
+      setSelectedOptions({
+        ...initialSelectedOptions,
+        competition: selectedOptions.competition,
+        season: selectedOptions.season,
+        match: newValue,
+      });
     } else if (name === "team") {
       newValue = teams?.find((x) => x.team_id === Number(value));
+      setSelectedOptions({
+        ...initialSelectedOptions,
+        competition: selectedOptions.competition,
+        season: selectedOptions.season,
+        match: selectedOptions.match,
+        team: newValue,
+      });
     } else if (name === "player") {
       newValue = selectedOptions?.team?.lineup.find(
         (x) => x.player_id === value
       );
+      setSelectedOptions({
+        ...initialSelectedOptions,
+        competition: selectedOptions.competition,
+        season: selectedOptions.season,
+        match: selectedOptions.match,
+        team: selectedOptions.team,
+        player: newValue,
+      });
     }
-    setSelectedOptions({
-      ...selectedOptions,
-      [name]: newValue,
-    });
   };
 
   useEffect(() => {
