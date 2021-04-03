@@ -10,8 +10,11 @@ import { Grid, createStyles, Theme, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    grid: {
-      padding: theme.spacing(5),
+    outerGrid: {
+      padding: theme.spacing(6),
+    },
+    innerGrid: {
+      padding: theme.spacing(4),
     },
   })
 );
@@ -36,11 +39,16 @@ const MatchAnalysis = () => {
   };
 
   return (
-    <Grid container className={styles.grid} justify={"space-evenly"}>
-      <Grid xs={8} item>
+    <Grid
+      container
+      className={styles.outerGrid}
+      justify={"space-evenly"}
+      alignItems={"center"}
+    >
+      <Grid lg={9} md={9} sm={12} xs={12} item className={styles.innerGrid}>
         <ViewComponent passDetails={passDetails} getPassData={getPassData} />
       </Grid>
-      <Grid xs={3} item>
+      <Grid lg={3} md={3} sm={12} xs={12} item className={styles.innerGrid}>
         <ControllerComponent
           handleSubmit={handleSubmit}
           passData={selectedPass}
