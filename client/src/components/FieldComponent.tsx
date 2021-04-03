@@ -21,12 +21,15 @@ const FieldComponent: React.FC<{
     body?: number,
     playType?: number
   ) => {
-    let mid = findLocation([(start[0] + end[0]) / 2, (start[1] + end[1]) / 2]);
+    let mid = findPassPoints([
+      (start[0] + end[0]) / 2,
+      (start[1] + end[1]) / 2,
+    ]);
     height = HeightInfo.find((x) => x.id === height)?.height || 0.05;
     const curve = new CatmullRomCurve3([
-      new Vector3(...findLocation(start, body, playType)),
-      new Vector3(mid[0], height, mid[2]),
-      new Vector3(...findLocation(end, body, playType, height)),
+      new Vector3(...findPassPoints(start, body, playType)),
+      new Vector3(mid[0], height !== 0.05 ? height + 0.1 : height, mid[2]),
+      new Vector3(...findPassPoints(end, body, playType, height)),
     ]);
 
     return curve.getPoints(25);
@@ -35,17 +38,36 @@ const FieldComponent: React.FC<{
   const findLocation = (
     coordinates: Array<number>,
     body?: number,
-    playType?: number,
-    passHeight?: number
+    playType?: number
   ) => {
-    body = BodyInfo.find((x) => x.id === body)?.height;
+    let isThrow = !body && playType === 4;
+    body = BodyInfo.find((x) => x.id === body)?.height || 0.05;
     playType = PlayPatternInfo.find((x) => x.id === playType)?.height;
-    let isThrow = !body && playType === 0.5;
     return [
       coordinates[0] / 10 - 6,
-      isThrow ? (passHeight ? passHeight : playType) : body,
+      isThrow ? playType : body,
       coordinates[1] / 10 - 4,
     ];
+  };
+
+  const findPassPoints = (
+    coordinates: Array<number>,
+    body?: number,
+    playType?: number,
+    height?: number
+  ) => {
+    let isThrow = !body && playType === 4;
+    body = BodyInfo.find((x) => x.id === body)?.height || 0.05;
+    playType = PlayPatternInfo.find((x) => x.id === playType)?.height;
+    if (height) {
+      return [coordinates[0] / 10 - 6, height, coordinates[1] / 10 - 4];
+    } else {
+      return [
+        coordinates[0] / 10 - 6,
+        isThrow ? playType : body,
+        coordinates[1] / 10 - 4,
+      ];
+    }
   };
 
   const handlePassSelection = (ev: PassDetailsTypes) => {
