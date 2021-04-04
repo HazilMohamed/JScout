@@ -17,11 +17,13 @@ def get_passes(match_id, player_id):
         match = pd.json_normalize(data, sep='_')
         match_player = match[(match['player_id'] == player_id)
                              & (match['pass_outcome_id'].isna())]
+        if len(match_player.index) == 0:
+            return 104
         match_player_pass = match_player[match_player['type_name']
                                          == 'Pass'][passing_attr]
         return match_player_pass.T.to_json()
     except:
-        return 'Something went wrong!'
+        return 103
 
 
 if __name__ == "__main__":

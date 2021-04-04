@@ -15,8 +15,8 @@ def get_matches(comp_id, season_id):
             'match_id', 'home_team_home_team_name', 'away_team_away_team_name']]
         return matches.T.to_json()
     except:
-        return 'Something went wrong!'
-    return
+        return 102 
+
 
 
 if __name__ == "__main__":

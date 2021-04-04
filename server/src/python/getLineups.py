@@ -2,7 +2,7 @@ import pandas as pd
 import json
 import sys
 
-match_id = int(sys.argv[1])
+match_id = sys.argv[1]
 
 
 def get_lineups(match_id):
@@ -12,7 +12,7 @@ def get_lineups(match_id):
         lineups = pd.json_normalize(data, sep="_")
         return lineups.T.to_json()
     except:
-        return 'Something went wrong!'
+        return 103
     return
 
 

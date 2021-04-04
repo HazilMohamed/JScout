@@ -1,5 +1,6 @@
 import express from "express";
 import { PythonShell } from "python-shell";
+import { ReturnType } from "../../../types";
 
 const competitionsRouter = express.Router();
 
@@ -8,16 +9,25 @@ competitionsRouter.get("/", (req, res) => {
 });
 
 competitionsRouter.post("/", (req, res) => {
+  let response: ReturnType;
   const pythonOptions = {
     scriptPath: "./src/python/",
   };
   PythonShell.run("./getCompetitions.py", pythonOptions, function (err, out) {
     if (err) {
-      res.json(err);
+      response = {
+        success: false,
+        message: "Something went wrong",
+      };
     }
     if (out) {
-      res.json(out);
+      response = {
+        success: true,
+        message: "Queried successfully",
+        data: out,
+      };
     }
+    res.json(response);
   });
 });
 
