@@ -5,12 +5,13 @@ const useStyles = makeStyles((theme: Theme) =>
     controller: {
       backgroundColor: "#dad873",
       textAlign: "center",
+      height: '815px'
     },
     header: {
-      fontSize: "1.7rem",
+      fontSize: "2rem",
       fontWeight: 800,
       margin: 0,
-      padding: theme.spacing(2),
+      paddingTop: theme.spacing(2),
     },
     grid: {
       display: "block",

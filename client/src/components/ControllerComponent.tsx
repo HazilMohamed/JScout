@@ -58,9 +58,13 @@ const ControllerComponent: React.FC<{
 
   const fetchCompetitions = () => {
     axios.post(api + "/match/competitions").then((res) => {
-      const data = JSON.parse(res.data[0]);
-      const fetched: Array<CompetitionType> = Object.values(data);
-      setCompetitions(fetched);
+      if (res.data && res.data.success) {
+        const data = JSON.parse(res.data.data[0]);
+        const fetched: Array<CompetitionType> = Object.values(data);
+        setCompetitions(fetched);
+      } else {
+        console.log(res.data.message);
+      }
     });
   };
 
@@ -70,9 +74,13 @@ const ControllerComponent: React.FC<{
         compId: selectedOptions?.competition?.competition_id,
       })
       .then((res) => {
-        const data = JSON.parse(res.data[0]);
-        const fetched: Array<SeasonType> = Object.values(data);
-        setSeasons(fetched);
+        if (res.data && res.data.success) {
+          const data = JSON.parse(res.data.data[0]);
+          const fetched: Array<SeasonType> = Object.values(data);
+          setSeasons(fetched);
+        } else {
+          console.log(res.data.message);
+        }
       });
   };
 
@@ -83,9 +91,13 @@ const ControllerComponent: React.FC<{
         seasonId: selectedOptions?.season?.season_id,
       })
       .then((res) => {
-        const data = JSON.parse(res.data[0]);
-        const fetched: Array<MatchType> = Object.values(data);
-        setMatches(fetched);
+        if (res.data && res.data.success) {
+          const data = JSON.parse(res.data.data[0]);
+          const fetched: Array<MatchType> = Object.values(data);
+          setMatches(fetched);
+        } else {
+          console.log(res.data.message);
+        }
       });
   };
 
@@ -95,9 +107,13 @@ const ControllerComponent: React.FC<{
         matchId: selectedOptions?.match?.match_id,
       })
       .then((res) => {
-        const data = JSON.parse(res.data[0]);
-        const fetched: Array<TeamType> = Object.values(data);
-        setTeams(fetched);
+        if (res.data && res.data.success) {
+          const data = JSON.parse(res.data.data[0]);
+          const fetched: Array<TeamType> = Object.values(data);
+          setTeams(fetched);
+        } else {
+          console.log(res.data.message);
+        }
       });
   };
 
@@ -176,7 +192,7 @@ const ControllerComponent: React.FC<{
           <Paper
             elevation={3}
             className={styles.paperForm}
-            style={{ height: passData ? "320px" : "710px" }}
+            style={{ height: passData ? "335px" : "715px" }}
           >
             <form className={styles.form}>
               {competitions && (

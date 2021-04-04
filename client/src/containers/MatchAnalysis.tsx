@@ -29,8 +29,12 @@ const MatchAnalysis = () => {
     axios
       .post(api + "/match/passes", { matchId: matchId, playerId: playerId })
       .then((res) => {
-        const data = JSON.parse(res.data[0]);
-        setPassDetails(Object.values(data));
+        if (res.data && res.data.success) {
+          const data = JSON.parse(res.data.data[0]);
+          setPassDetails(Object.values(data));
+        } else {
+          console.log(res.data.message);
+        }
       });
   };
 
