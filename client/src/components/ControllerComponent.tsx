@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 import config from "../config";
+import Selector from "../helpers/selectorHelper";
 import {
   CompetitionType,
   SeasonType,
@@ -11,17 +12,9 @@ import {
   PlayerType,
   PassDetailsTypes,
 } from "../types/types";
-import { BodyInfo, HeightInfo, PlayPatternInfo } from "../helpers/passHelpers";
+import { BodyInfo, HeightInfo, PlayPatternInfo } from "../helpers/passHelper";
 
-import {
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  Button,
-  Paper,
-  Typography,
-} from "@material-ui/core";
+import { Grid, MenuItem, Button, Paper, Typography } from "@material-ui/core";
 import { ArrowForward } from "@material-ui/icons";
 
 import useStyles from "../styles/ControllerStyles";
@@ -187,154 +180,96 @@ const ControllerComponent: React.FC<{
   return (
     <Paper elevation={5} className={styles.controller}>
       <Typography className={styles.header}>JScout</Typography>
-      <Grid container justify={"space-around"}>
+      <Grid container justify={"space-between"}>
         <Grid xs={12} item className={styles.grid}>
           <Paper
             elevation={3}
             className={styles.paperForm}
-            style={{ height: passData ? "335px" : "715px" }}
+            style={{ height: passData ? "340px" : "720px" }}
           >
             <form className={styles.form}>
               {competitions && (
-                <div className={styles.items}>
-                  <InputLabel
-                    className={styles.formText}
-                    id="competition-label"
-                  >
-                    Competition
-                  </InputLabel>
-                  <Select
-                    id="competition"
-                    name="competition"
-                    labelId="competition-label"
-                    value={selectedOptions?.competition?.competition_id || ""}
-                    onChange={(ev) =>
-                      changeOptions(ev.target.name, ev.target.value)
-                    }
-                    displayEmpty
-                    className={styles.formText}
-                  >
-                    <MenuItem value="" disabled>
-                      Select a Competition
+                <Selector
+                  name={"competition"}
+                  value={selectedOptions.competition?.competition_id || ""}
+                  changeOptions={changeOptions}
+                >
+                  <MenuItem value="" disabled>
+                    Select a Competition
+                  </MenuItem>
+                  {competitions.map((comp: CompetitionType) => (
+                    <MenuItem
+                      key={comp.competition_id}
+                      value={comp.competition_id}
+                    >
+                      {comp.competition_name}
                     </MenuItem>
-                    {competitions.map((comp: CompetitionType) => (
-                      <MenuItem
-                        key={comp.competition_id}
-                        value={comp.competition_id}
-                      >
-                        {comp.competition_name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </div>
+                  ))}
+                </Selector>
               )}
               {selectedOptions?.competition && seasons && (
-                <div className={styles.items}>
-                  <InputLabel className={styles.formText} id="season-label">
-                    Season
-                  </InputLabel>
-                  <Select
-                    id="season"
-                    name="season"
-                    labelId="season-label"
-                    value={selectedOptions.season?.season_id || ""}
-                    onChange={(ev) =>
-                      changeOptions(ev.target.name, ev.target.value)
-                    }
-                    displayEmpty
-                    className={styles.formText}
-                  >
-                    <MenuItem value="" disabled>
-                      Select a Season
+                <Selector
+                  name={"season"}
+                  value={selectedOptions.season?.season_id || ""}
+                  changeOptions={changeOptions}
+                >
+                  <MenuItem value="" disabled>
+                    Select a Season
+                  </MenuItem>
+                  {seasons.map((season: SeasonType) => (
+                    <MenuItem key={season.season_id} value={season.season_id}>
+                      {season.season_name}
                     </MenuItem>
-                    {seasons.map((season: SeasonType) => (
-                      <MenuItem key={season.season_id} value={season.season_id}>
-                        {season.season_name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </div>
+                  ))}
+                </Selector>
               )}
               {selectedOptions?.season && matches && (
-                <div className={styles.items}>
-                  <InputLabel className={styles.formText} id="match-label">
-                    Match
-                  </InputLabel>
-                  <Select
-                    id="match"
-                    name="match"
-                    labelId="match-label"
-                    value={selectedOptions.match?.match_id || ""}
-                    onChange={(ev) =>
-                      changeOptions(ev.target.name, ev.target.value)
-                    }
-                    displayEmpty
-                    className={styles.formText}
-                  >
-                    <MenuItem value="" disabled>
-                      Select a Match
+                <Selector
+                  name={"match"}
+                  value={selectedOptions.match?.match_id || ""}
+                  changeOptions={changeOptions}
+                >
+                  <MenuItem value="" disabled>
+                    Select a Match
+                  </MenuItem>
+                  {matches.map((match: MatchType) => (
+                    <MenuItem key={match.match_id} value={match.match_id}>
+                      {`${match.home_team_home_team_name} vs ${match.away_team_away_team_name}`}
                     </MenuItem>
-                    {matches.map((match: MatchType) => (
-                      <MenuItem key={match.match_id} value={match.match_id}>
-                        {`${match.home_team_home_team_name} vs ${match.away_team_away_team_name}`}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </div>
+                  ))}
+                </Selector>
               )}
               {selectedOptions?.match && teams && (
-                <div className={styles.items}>
-                  <InputLabel className={styles.formText} id="team-label">
-                    Team
-                  </InputLabel>
-                  <Select
-                    id="team"
-                    name="team"
-                    labelId="team-label"
-                    value={selectedOptions.team?.team_id || ""}
-                    onChange={(ev) =>
-                      changeOptions(ev.target.name, ev.target.value)
-                    }
-                    displayEmpty
-                    className={styles.formText}
-                  >
-                    <MenuItem value="" disabled>
-                      Select a Team
+                <Selector
+                  name={"team"}
+                  value={selectedOptions.team?.team_id || ""}
+                  changeOptions={changeOptions}
+                >
+                  <MenuItem value="" disabled>
+                    Select a Team
+                  </MenuItem>
+                  {teams.map((team: TeamType) => (
+                    <MenuItem key={team.team_id} value={team.team_id}>
+                      {team.team_name}
                     </MenuItem>
-                    {teams.map((team: TeamType) => (
-                      <MenuItem key={team.team_id} value={team.team_id}>
-                        {team.team_name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </div>
+                  ))}
+                </Selector>
               )}
               {selectedOptions?.team && (
-                <div className={styles.items}>
-                  <InputLabel className={styles.formText} id="player-label">
-                    Player
-                  </InputLabel>
-                  <Select
-                    id="player"
-                    name="player"
-                    labelId="player-label"
-                    value={selectedOptions.player?.player_id || ""}
-                    onChange={(ev) =>
-                      changeOptions(ev.target.name, ev.target.value)
-                    }
-                    displayEmpty
-                    className={styles.formText}
-                  >
-                    <MenuItem value="" disabled>
-                      Select a Player
+                <Selector
+                  name={"player"}
+                  value={selectedOptions.player?.player_id || ""}
+                  changeOptions={changeOptions}
+                >
+                  <MenuItem value="" disabled>
+                    Select a Player
+                  </MenuItem>
+                  {selectedOptions.team.lineup.map((player) => (
+                    <MenuItem key={player.player_id} value={player.player_id}>
+                      {player.player_name}
                     </MenuItem>
-                    {selectedOptions.team.lineup.map((player) => (
-                      <MenuItem key={player.player_id} value={player.player_id}>
-                        {player.player_name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </div>
+                  ))}
+                </Selector>
               )}
               {selectedOptions?.player && (
                 <div
@@ -363,7 +298,7 @@ const ControllerComponent: React.FC<{
             <Paper
               elevation={3}
               className={styles.paperForm}
-              style={{ height: "350px" }}
+              style={{ height: "340px" }}
             >
               <h3>Pass Data</h3>
               <Typography className={styles.paperContent}>

@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '815px'
     },
     header: {
-      fontSize: "2rem",
+      fontSize: 38,
       fontWeight: 800,
       margin: 0,
       paddingTop: theme.spacing(2),

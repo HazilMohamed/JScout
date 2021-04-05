@@ -4,7 +4,7 @@ import { DoubleSide, Vector3, CatmullRomCurve3 } from "three";
 import { Line, Plane, useTexture } from "@react-three/drei";
 
 import { PassDetailsTypes } from "../types/types";
-import { HeightInfo, BodyInfo, PlayPatternInfo } from "../helpers/passHelpers";
+import { HeightInfo, BodyInfo, PlayPatternInfo } from "../helpers/passHelper";
 
 const FieldComponent: React.FC<{
   getPassData: Function;
