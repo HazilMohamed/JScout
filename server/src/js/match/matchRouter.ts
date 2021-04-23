@@ -1,8 +1,7 @@
-export {};
 import express from "express";
 
+import attributesRouter from "../attributes/attributesRouter";
 import lineupsRouter from "./get/getLineups";
-import passesRouter from "./get/getPasses";
 import competitionsRouter from "./get/getCompetitions";
 import seasonsRouter from "./get/getSeasons";
 import matchesRouter from "./get/getMatches";
@@ -13,10 +12,10 @@ matchRouter.get("/", (req, res) => {
   res.send("hello from match");
 });
 
-matchRouter.use("/passes", passesRouter);
 matchRouter.use("/lineups", lineupsRouter);
 matchRouter.use("/competitions", competitionsRouter);
 matchRouter.use("/seasons", seasonsRouter);
 matchRouter.use("/matches", matchesRouter);
+matchRouter.use("/attributes", attributesRouter);
 
 export default matchRouter;

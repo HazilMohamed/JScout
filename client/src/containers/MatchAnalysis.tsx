@@ -27,7 +27,10 @@ const MatchAnalysis = () => {
 
   const handleSubmit = (matchId: number, playerId: number) => {
     axios
-      .post(api + "/match/passes", { matchId: matchId, playerId: playerId })
+      .post(api + "/match/attributes/passes", {
+        matchId: matchId,
+        playerId: playerId,
+      })
       .then((res) => {
         if (res.data && res.data.success) {
           const data = JSON.parse(res.data.data[0]);
